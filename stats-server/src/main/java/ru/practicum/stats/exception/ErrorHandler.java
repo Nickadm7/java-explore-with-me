@@ -12,7 +12,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleValidationException(final ValidationException e) {
-        log.info("400 {}", e.getMessage());
+        log.info("Error 400 {}", e.getMessage());
         return e.getMessage();
     }
 }
