@@ -1,5 +1,12 @@
 package ru.practicum.stats.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ViewStats {
     private String app; //Название сервиса
 

@@ -1,17 +1,37 @@
 package ru.practicum.stats.model;
 
 import lombok.*;
+import ru.practicum.stats.dto.ViewStats;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "hits")
+@NamedNativeQuery(name = "findAllHitsNoUnique",
+        query = "SELECT app AS app, uri AS uri, COUNT(ip) AS hits FROM hits " +
+                "WHERE uri IN ?3 AND (timestamp >= ?1 AND timestamp <= ?2) " +
+                "GROUP BY app, uri " +
+                "ORDER BY hits DESC", resultSetMapping = "ViewStatsMapping")
+@NamedNativeQuery(name = "findAllHitsUnique",
+        query = "SELECT app AS app, uri AS uri, COUNT(DISTINCT ip) AS hits FROM hits " +
+                "WHERE uri IN ?3 AND (timestamp >= ?1 AND timestamp <= ?2) " +
+                "GROUP BY app, uri " +
+                "ORDER BY hits DESC", resultSetMapping = "ViewStatsMapping")
+@SqlResultSetMapping(name = "ViewStatsMapping",
+        classes = {
+                @ConstructorResult(
+                        columns = {
+                                @ColumnResult(name = "app", type = String.class),
+                                @ColumnResult(name = "uri", type = String.class),
+                                @ColumnResult(name = "hits", type = Long.class)
+                        },
+                        targetClass = ViewStats.class
+                )}
+)
 public class Hit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,9 +2,8 @@ package ru.practicum.stats.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.stats.dto.EndpointHit;
 import ru.practicum.stats.dto.ViewStats;
 import ru.practicum.stats.service.StatsService;
 
@@ -23,5 +22,11 @@ public class StatsController {
                                     @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("Get запрос к /stats параметры start: {}, end: {}, uris: {}, unique: {}", start, end, uris, unique);
         return statsService.getStats(start, end, uris, unique);
+    }
+
+    @PostMapping("/hit")
+    public EndpointHit postHit(@RequestBody EndpointHit endpointHit) {
+        log.info("Post запрос к /hit {}", endpointHit);
+        return statsService.createHit(endpointHit);
     }
 }
