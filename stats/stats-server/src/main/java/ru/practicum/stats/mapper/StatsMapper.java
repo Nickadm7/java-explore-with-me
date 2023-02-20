@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.stats.dto.EndpointHit;
+import ru.practicum.EndpointHit;
 import ru.practicum.stats.model.Hit;
 
 import java.time.LocalDateTime;
