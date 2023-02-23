@@ -1,6 +1,6 @@
 package ru.practicum.stats.exception;
 
-public class ValidationException extends RuntimeException{
+public class ValidationException extends RuntimeException {
     public ValidationException(String message) {
         super(message);
     }
