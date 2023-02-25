@@ -13,10 +13,9 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class StatsMapper {
+public final class StatsMapper {
     private static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 
     public static Hit endpointHitToHit(EndpointHit endpointHit) {
         return new Hit(

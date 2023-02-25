@@ -11,16 +11,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "hits")
-@NamedNativeQuery(name = "findAllHitsNoUnique",
+@NamedNativeQueries({
+    @NamedNativeQuery(name = "findAllHitsNoUnique",
         query = "SELECT app AS app, uri AS uri, COUNT(ip) AS hits FROM hits " +
                 "WHERE uri IN ?3 AND (timestamp >= ?1 AND timestamp <= ?2) " +
                 "GROUP BY app, uri " +
-                "ORDER BY hits DESC", resultSetMapping = "ViewStatsMapping")
-@NamedNativeQuery(name = "findAllHitsUnique",
+                "ORDER BY hits DESC", resultSetMapping = "ViewStatsMapping"),
+    @NamedNativeQuery(name = "findAllHitsUnique",
         query = "SELECT app AS app, uri AS uri, COUNT(DISTINCT ip) AS hits FROM hits " +
                 "WHERE uri IN ?3 AND (timestamp >= ?1 AND timestamp <= ?2) " +
                 "GROUP BY app, uri " +
-                "ORDER BY hits DESC", resultSetMapping = "ViewStatsMapping")
+                "ORDER BY hits DESC", resultSetMapping = "ViewStatsMapping")})
 @SqlResultSetMapping(name = "ViewStatsMapping",
         classes = {
                 @ConstructorResult(
