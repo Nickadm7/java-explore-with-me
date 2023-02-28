@@ -10,11 +10,18 @@ import ru.practicum.ewmservice.categories.model.Category;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CategoryMapper {
+public final class CategoryMapper {
     public static CategoryDto categoryToCategoryDto(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .build();
+    }
+
+    public static Category categoryDtoToCategory(CategoryDto categoryDto) {
+        return Category.builder()
+                .id(categoryDto.getId())
+                .name(categoryDto.getName())
                 .build();
     }
 }

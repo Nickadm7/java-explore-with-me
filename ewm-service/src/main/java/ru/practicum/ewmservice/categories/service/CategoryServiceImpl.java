@@ -10,8 +10,10 @@ import ru.practicum.ewmservice.categories.dto.CategoryDto;
 import ru.practicum.ewmservice.categories.mapper.CategoryMapper;
 import ru.practicum.ewmservice.categories.model.Category;
 import ru.practicum.ewmservice.categories.repository.CategoryRepository;
+import ru.practicum.ewmservice.exception.ConflictExistException;
 import ru.practicum.ewmservice.exception.NotFoundParameterException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,5 +44,42 @@ public class CategoryServiceImpl implements CategoryService {
                     throw new NotFoundParameterException("Не найдена category по catId");
                 });
         return CategoryMapper.categoryToCategoryDto(out);
+    }
+
+    @Override
+    @Transactional
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category bufferToSave = CategoryMapper.categoryDtoToCategory(categoryDto);
+        if (categoryRepository.existsByName(categoryDto.getName())) {
+            throw new ConflictExistException("Категория с данным именем уже существует");
+        }
+        Category out = categoryRepository.save(bufferToSave);
+        log.info("Категория с id: {} и name: {} сохранена", bufferToSave.getId(), bufferToSave.getName());
+        return CategoryMapper.categoryToCategoryDto(out);
+    }
+
+    @Override
+    public CategoryDto updateCategory(Long catId, CategoryDto categoryDto) {
+        Category bufferToSave = categoryRepository.findById(catId)
+                .orElseThrow(() -> {
+                    throw new NotFoundParameterException("Не найдена category по catId");
+                });
+        if (categoryRepository.existsByName(categoryDto.getName())) {
+            throw new ConflictExistException("Категория с данным именем уже существует");
+        }
+        Category out = categoryRepository.save(bufferToSave);
+        log.info("Категория с id: {} и name: {} обновлена", bufferToSave.getId(), bufferToSave.getName());
+        return CategoryMapper.categoryToCategoryDto(out);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategory(Long catId) {
+        categoryRepository.findById(catId)
+                .orElseThrow(() -> {
+                    throw new NotFoundParameterException("Не найдена category по catId");
+                });
+        categoryRepository.deleteById(catId);
+        log.info("Категория с id: {} удалена", catId);
     }
 }
