@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
         } else {
             outUser = userRepository.findAllById(ids);
         }
+        log.info("Получены User: {}", ids);
         return outUser.stream()
                 .map(UserMapper::userToUserDto)
                 .collect(Collectors.toList());
