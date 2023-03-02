@@ -61,7 +61,7 @@ public class Event {
     @Column(name = "request_moderation")
     private Boolean requestModeration; //Нужна ли пре-модерация заявок на участие
 
-    @JoinColumn(name = "state_id")
+    @JoinColumn(name = "state")
     @Enumerated(EnumType.STRING)
     private State state;
 
@@ -69,5 +69,5 @@ public class Event {
     private String title; //Заголовок
 
     @Column(name = "views")
-    private int views;//Количество просмотрев события
+    private Long views;//Количество просмотрев события
 }

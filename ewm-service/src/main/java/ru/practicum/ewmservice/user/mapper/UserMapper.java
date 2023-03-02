@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewmservice.user.dto.InputUserDto;
 import ru.practicum.ewmservice.user.dto.UserDto;
+import ru.practicum.ewmservice.user.dto.UserShortDto;
 import ru.practicum.ewmservice.user.model.User;
 
 @Slf4j
@@ -24,6 +25,13 @@ public final class UserMapper {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .build();
+    }
+
+    public static UserShortDto userToUserShortDto(User user) {
+        return UserShortDto.builder()
+                .id(user.getId())
+                .name(user.getName())
                 .build();
     }
 }

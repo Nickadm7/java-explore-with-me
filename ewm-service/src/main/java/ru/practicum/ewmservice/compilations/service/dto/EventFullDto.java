@@ -1,4 +1,4 @@
-package ru.practicum.ewmservice.event.dto;
+package ru.practicum.ewmservice.compilations.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -55,5 +55,5 @@ public class EventFullDto {
     @NotNull
     private String title; //Заголовок
 
-    private int views;//Количество просмотрев события
+    private Long views;//Количество просмотрев события
 }

@@ -1,10 +1,7 @@
-package ru.practicum.ewmservice.event.dto;
+package ru.practicum.ewmservice.compilations.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.ewmservice.categories.dto.CategoryDto;
 import ru.practicum.ewmservice.user.dto.UserShortDto;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class EventShortDto {
     private Long id;
 
