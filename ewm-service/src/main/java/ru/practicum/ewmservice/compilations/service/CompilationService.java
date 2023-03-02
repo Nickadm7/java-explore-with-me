@@ -12,7 +12,7 @@ public interface CompilationService {
 
     CompilationDto createCompilationForAdmin(NewCompilationDto newCompilationDto);
 
-    CompilationDto deleteCompilationForAdmin(Long compId);
+    void deleteCompilationForAdmin(Long compId);
 
     CompilationDto updateCompilationForAdmin(NewCompilationDto newCompilationDto, Long compId);
 }

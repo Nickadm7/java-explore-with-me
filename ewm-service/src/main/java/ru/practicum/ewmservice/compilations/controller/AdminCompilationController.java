@@ -25,9 +25,9 @@ public class AdminCompilationController {
 
     @DeleteMapping(path = "/{compId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public CompilationDto deleteCompilationForAdmin(@PathVariable("compId") Long compId) {
+    public void deleteCompilationForAdmin(@PathVariable("compId") Long compId) {
         log.info("Delete запрос к /admin/compilations/{compId} с параметрами compId: {}", compId);
-        return compilationService.deleteCompilationForAdmin(compId);
+        compilationService.deleteCompilationForAdmin(compId);
     }
 
     @PatchMapping(path = "/{compId}")

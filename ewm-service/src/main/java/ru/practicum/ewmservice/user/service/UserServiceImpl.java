@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
         } else {
             outUser = userRepository.findAllById(ids);
         }
-        log.info("Получены User: {}", ids);
+        log.info("Получены User c id: {}", ids);
         return outUser.stream()
                 .map(UserMapper::userToUserDto)
                 .collect(Collectors.toList());
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = UserMapper.inputUserDtoToUser(inputUserDto);
         userRepository.save(user);
-        log.info("Сохранен user: {} в базу данных", user);
+        log.info("Сохранен User с параметрами id: {}, name: {}, email: {}", user.getId(), user.getName(), user.getEmail());
         return UserMapper.userToUserDto(user);
     }
 

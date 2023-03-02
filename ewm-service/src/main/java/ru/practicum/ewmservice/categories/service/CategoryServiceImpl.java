@@ -45,6 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
+        log.info("Получена категория с catId: {}", catId);
         return CategoryMapper.categoryToCategoryDto(out);
     }
 

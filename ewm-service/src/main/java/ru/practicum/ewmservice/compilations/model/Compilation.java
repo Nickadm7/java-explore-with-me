@@ -22,10 +22,10 @@ public class Compilation {
     private Long id;
 
     @Column(name = "pinned")
-    private Boolean pinned;
+    private Boolean pinned; //Закреплена ли подборка на главной странице сайта
 
     @Column(name = "title")
-    private String title;
+    private String title; //Заголовок подборки
 
     @ManyToMany
     @JoinTable(
@@ -33,5 +33,5 @@ public class Compilation {
             joinColumns = @JoinColumn(name = "compilation_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
-    private List<Event> events;
+    private List<Event> events; //Список событий входящих в подборку
 }
