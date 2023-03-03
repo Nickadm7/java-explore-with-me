@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewmservice.categories.mapper.CategoryMapper;
 import ru.practicum.ewmservice.categories.model.Category;
-import ru.practicum.ewmservice.compilations.service.dto.EventFullDto;
-import ru.practicum.ewmservice.compilations.service.dto.EventShortDto;
-import ru.practicum.ewmservice.compilations.service.dto.NewEventDto;
+import ru.practicum.ewmservice.event.dto.EventFullDto;
+import ru.practicum.ewmservice.event.dto.EventShortDto;
+import ru.practicum.ewmservice.event.dto.NewEventDto;
 import ru.practicum.ewmservice.event.model.Event;
 import ru.practicum.ewmservice.event.model.State;
 import ru.practicum.ewmservice.user.mapper.UserMapper;
@@ -28,6 +28,7 @@ public class EventMapper {
 
         event.setAnnotation(newEventDto.getAnnotation());
         event.setCategory(category);
+        event.setCreatedOn(LocalDateTime.now());
         event.setDescription(newEventDto.getDescription());
         event.setEventDate(newEventDto.getEventDate());
         event.setInitiator(initiator);

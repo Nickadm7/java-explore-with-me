@@ -1,6 +1,8 @@
 package ru.practicum.ewmservice.event.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Table(name = "locations")
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Location {
     @Id
     @Column(name = "location_id")
@@ -16,8 +20,17 @@ public class Location {
     private Long id;
 
     @Column(name = "lat")
-    private double lat; //Широта
+    private Double lat; //Широта
 
     @Column(name = "lon", unique = true)
-    private double lon; //Долгота
+    private Double lon; //Долгота
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                '}';
+    }
 }

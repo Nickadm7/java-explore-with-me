@@ -3,7 +3,7 @@ package ru.practicum.ewmservice.compilations.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.ewmservice.compilations.service.dto.EventShortDto;
+import ru.practicum.ewmservice.event.dto.EventShortDto;
 
 import java.util.List;
 

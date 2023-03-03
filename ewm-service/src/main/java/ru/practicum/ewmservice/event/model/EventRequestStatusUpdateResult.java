@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.ewmservice.compilations.service.dto.ParticipationRequestDto;
+import ru.practicum.ewmservice.event.dto.ParticipationRequestDto;
 
 import java.util.List;
 

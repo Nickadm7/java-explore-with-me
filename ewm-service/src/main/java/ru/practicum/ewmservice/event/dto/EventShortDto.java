@@ -1,4 +1,4 @@
-package ru.practicum.ewmservice.compilations.service.dto;
+package ru.practicum.ewmservice.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

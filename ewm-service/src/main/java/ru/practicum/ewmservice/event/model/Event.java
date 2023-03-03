@@ -41,7 +41,7 @@ public class Event {
     @Column(name = "event_date")
     private LocalDateTime eventDate; //Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss")
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "initiator_id")
     private User initiator; //Инициатор события
 
@@ -70,4 +70,26 @@ public class Event {
 
     @Column(name = "views")
     private Long views;//Количество просмотрев события
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", annotation='" + annotation + '\'' +
+                ", category=" + category +
+                ", confirmedRequests=" + confirmedRequests +
+                ", createdOn=" + createdOn +
+                ", description='" + description + '\'' +
+                ", eventDate=" + eventDate +
+                ", initiator=" + initiator +
+                ", location=" + location +
+                ", paid=" + paid +
+                ", participantLimit=" + participantLimit +
+                ", publishedOn=" + publishedOn +
+                ", requestModeration=" + requestModeration +
+                ", state=" + state +
+                ", title='" + title + '\'' +
+                ", views=" + views +
+                '}';
+    }
 }

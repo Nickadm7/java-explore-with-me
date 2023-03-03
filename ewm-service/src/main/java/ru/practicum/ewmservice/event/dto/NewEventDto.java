@@ -1,4 +1,4 @@
-package ru.practicum.ewmservice.compilations.service.dto;
+package ru.practicum.ewmservice.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -37,4 +37,19 @@ public class NewEventDto {
 
     @NotNull
     private String title; //Заголовок
+
+    @Override
+    public String toString() {
+        return "NewEventDto{" +
+                "annotation='" + annotation + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", eventDate=" + eventDate +
+                ", location=" + location +
+                ", paid=" + paid +
+                ", participantLimit=" + participantLimit +
+                ", requestModeration=" + requestModeration +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }
