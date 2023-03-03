@@ -1,18 +1,22 @@
 package ru.practicum.ewmservice.exception;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Slf4j
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
 @RestControllerAdvice
 public class ErrorHandler {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidationException(final ValidationException e) {
-        log.info("Error 400 {}", e.getMessage());
-        return e.getMessage();
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handleConflictException(final ConflictException e) {
+        String error = HttpStatus.CONFLICT + " " + LocalDateTime.now().format(formatter);
+        return Map.of(error, e.getMessage());
     }
 }

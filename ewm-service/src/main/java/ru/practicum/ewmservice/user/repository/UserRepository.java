@@ -6,4 +6,5 @@ import ru.practicum.ewmservice.user.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByName(String name);
 }

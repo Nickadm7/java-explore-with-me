@@ -9,6 +9,7 @@ import ru.practicum.ewmservice.user.dto.InputUserDto;
 import ru.practicum.ewmservice.user.dto.UserDto;
 import ru.practicum.ewmservice.user.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -29,7 +30,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    UserDto createUser(@RequestBody InputUserDto inputUserDto) {
+    UserDto createUser(@Valid @RequestBody InputUserDto inputUserDto) {
         log.info("Post запрос к /admin/users с параметрами inputUserDto: {}", inputUserDto);
         return userService.createUser(inputUserDto);
     }

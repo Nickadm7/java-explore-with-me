@@ -12,7 +12,7 @@ import ru.practicum.ewmservice.categories.dto.CategoryDto;
 import ru.practicum.ewmservice.categories.mapper.CategoryMapper;
 import ru.practicum.ewmservice.categories.model.Category;
 import ru.practicum.ewmservice.categories.repository.CategoryRepository;
-import ru.practicum.ewmservice.exception.ConflictExistException;
+import ru.practicum.ewmservice.exception.ConflictException;
 import ru.practicum.ewmservice.exception.NotFoundParameterException;
 
 import javax.transaction.Transactional;
@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category bufferToSave = CategoryMapper.categoryDtoToCategory(categoryDto);
         if (categoryRepository.existsByName(categoryDto.getName())) {
-            throw new ConflictExistException("Категория с данным именем уже существует");
+            throw new ConflictException("Категория с данным именем уже существует");
         }
         Category out = categoryRepository.save(bufferToSave);
         log.info("Категория с id: {} и name: {} сохранена", bufferToSave.getId(), bufferToSave.getName());
@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
                     throw new NotFoundParameterException("Не найдена category по catId");
                 });
         if (categoryRepository.existsByName(categoryDto.getName())) {
-            throw new ConflictExistException("Категория с данным именем уже существует");
+            throw new ConflictException("Категория с данным именем уже существует");
         }
         Category out = categoryRepository.save(bufferToSave);
         log.info("Категория с id: {} и name: {} обновлена", bufferToSave.getId(), bufferToSave.getName());

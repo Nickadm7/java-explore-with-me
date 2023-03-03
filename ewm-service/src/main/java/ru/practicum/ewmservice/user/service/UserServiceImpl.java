@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.ewmservice.exception.ConflictException;
 import ru.practicum.ewmservice.exception.ValidationException;
 import ru.practicum.ewmservice.user.dto.InputUserDto;
 import ru.practicum.ewmservice.user.dto.UserDto;
@@ -40,6 +41,9 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(InputUserDto inputUserDto) {
         if (inputUserDto == null) {
             throw new ValidationException("inputUserDto не должен быть null");
+        }
+        if (userRepository.existsByName(inputUserDto.getName())) {
+            throw new ConflictException("Пользователь с данным именем уже существует");
         }
         if (inputUserDto.getName() == null || inputUserDto.getName().isEmpty()) {
             throw new ValidationException("inputUserDto Name не должен быть null");
