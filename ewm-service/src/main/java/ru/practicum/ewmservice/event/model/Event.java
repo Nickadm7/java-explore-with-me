@@ -45,7 +45,7 @@ public class Event {
     @JoinColumn(name = "initiator_id")
     private User initiator; //Инициатор события
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
     private Location location; //Координаты места проведения
 

@@ -28,9 +28,9 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleValidationException(final ValidationException e) {
-        String error = HttpStatus.BAD_REQUEST + " " + LocalDateTime.now().format(formatter);
+        String error = HttpStatus.CONFLICT + " " + LocalDateTime.now().format(formatter);
         return Map.of(error, e.getMessage());
     }
 

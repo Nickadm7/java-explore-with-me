@@ -10,13 +10,14 @@ import ru.practicum.ewmservice.categories.repository.CategoryRepository;
 import ru.practicum.ewmservice.event.dto.EventFullDto;
 import ru.practicum.ewmservice.event.dto.EventShortDto;
 import ru.practicum.ewmservice.event.dto.NewEventDto;
-import ru.practicum.ewmservice.event.dto.ParticipationRequestDto;
 import ru.practicum.ewmservice.event.mapper.EventMapper;
 import ru.practicum.ewmservice.event.mapper.LocationMapper;
 import ru.practicum.ewmservice.event.model.*;
 import ru.practicum.ewmservice.event.repository.EventRepository;
+import ru.practicum.ewmservice.exception.ValidationException;
 import ru.practicum.ewmservice.exception.WrongTimeException;
 import ru.practicum.ewmservice.exception.WrongUpdatedEventException;
+import ru.practicum.ewmservice.requests.dto.ParticipationRequestDto;
 import ru.practicum.ewmservice.user.model.User;
 import ru.practicum.ewmservice.user.repository.UserRepository;
 
@@ -141,7 +142,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto createEventForOwner(NewEventDto newEventDto, Long userId) {
         if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new WrongTimeException("EventDate раньше текущего времени + 2 часа");
+            throw new ValidationException("EventDate раньше текущего времени + 2 часа");
         }
         User initiator = getUserByIdFromRepository(userId);
         Category category = getCategoryByIdFromRepository(newEventDto.getCategory());
