@@ -19,7 +19,7 @@ public class AdminCategoryController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        log.info("Post запрос к /admin/categories с параметрами categoryDto: {}", categoryDto);
+        log.info("Post запрос к /admin/categories с параметрами category c name: {}", categoryDto.getName());
         return categoryService.createCategory(categoryDto);
     }
 

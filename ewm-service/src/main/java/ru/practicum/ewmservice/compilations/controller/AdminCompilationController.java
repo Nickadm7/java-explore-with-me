@@ -19,7 +19,8 @@ public class AdminCompilationController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public CompilationDto createCompilationForAdmin(@Validated @RequestBody NewCompilationDto newCompilationDto) {
-        log.info("Post запрос к /admin/compilations с параметрами newCompilationDto: {}", newCompilationDto);
+        log.info("Post запрос к /admin/compilations с параметрами events: {}, pinned: {}, title: {}",
+                newCompilationDto.getEvents(), newCompilationDto.getPinned(), newCompilationDto.getTitle());
         return compilationService.createCompilationForAdmin(newCompilationDto);
     }
 
@@ -33,7 +34,8 @@ public class AdminCompilationController {
     @PatchMapping(path = "/{compId}")
     public CompilationDto updateCompilationForAdmin(@Validated @RequestBody NewCompilationDto newCompilationDto,
                                  @PathVariable("compId") Long compId) {
-        log.info("Patch запрос к /admin/compilations/{compId} с параметрами compId: {}", compId);
+        log.info("Patch запрос к /admin/compilations/{compId} с параметрами compId: {}, events: {}, pinned: {}, title: {}",
+                compId, newCompilationDto.getEvents(), newCompilationDto.getPinned(), newCompilationDto.getTitle());
         return compilationService.updateCompilationForAdmin(newCompilationDto, compId);
     }
 }

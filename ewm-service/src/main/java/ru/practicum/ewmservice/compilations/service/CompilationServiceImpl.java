@@ -42,13 +42,15 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getCompilationById(Long compId) {
-        Compilation compilation = compilationRepository.findById(compId)
+        Compilation out = compilationRepository.findById(compId)
                 .orElseThrow(() -> {
                     log.info("Не найдена Compilation с id: {}", compId);
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
         log.info("Найдена Compilation с id: {}", compId);
-        return CompilationMapper.compilationToCompilationDto(compilation);
+        System.out.println(out);
+        //TODO доделать добавление списка Event
+        return CompilationMapper.compilationToCompilationDto(out);
     }
 
     @Override

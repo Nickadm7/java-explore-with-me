@@ -19,6 +19,8 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
            "and pr.status = ?2")
     List<ParticipationRequest> findAll_ByEvent_IdAndStatus(Long id, Status status);
 
+    List<ParticipationRequest> findAllByEvent_Id(Long eventId);
+
     @Query("select pr from ParticipationRequest as pr " +
             "where pr.event.id in :ids " +
             "and pr.status = 'CONFIRMED'")

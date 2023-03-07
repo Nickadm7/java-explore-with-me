@@ -12,8 +12,8 @@ import ru.practicum.ewmservice.categories.dto.CategoryDto;
 import ru.practicum.ewmservice.categories.mapper.CategoryMapper;
 import ru.practicum.ewmservice.categories.model.Category;
 import ru.practicum.ewmservice.categories.repository.CategoryRepository;
+import ru.practicum.ewmservice.event.repository.EventRepository;
 import ru.practicum.ewmservice.exception.ConflictException;
-import ru.practicum.ewmservice.exception.NotFoundParameterException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public List<CategoryDto> getAllCategories(Integer from, Integer size) {
@@ -41,10 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getById(Long catId) {
-        Category out = categoryRepository.findById(catId)
-                .orElseThrow(() -> {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        Category out = getCategoryByIdFromRepository(catId);
         log.info("Получена категория с catId: {}", catId);
         return CategoryMapper.categoryToCategoryDto(out);
     }
@@ -62,15 +60,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto updateCategory(Long catId, CategoryDto categoryDto) {
-        Category bufferToSave = categoryRepository.findById(catId)
-                .orElseThrow(() -> {
-                    throw new NotFoundParameterException("Не найдена category по catId");
-                });
+        Category bufferToSave = getCategoryByIdFromRepository(catId);
         if (categoryRepository.existsByName(categoryDto.getName())) {
             throw new ConflictException("Категория с данным именем уже существует");
         }
-        Category out = categoryRepository.save(bufferToSave);
+        Category out = categoryRepository.save(CategoryMapper.categoryDtoToCategory(categoryDto));
         log.info("Категория с id: {} и name: {} обновлена", bufferToSave.getId(), bufferToSave.getName());
         return CategoryMapper.categoryToCategoryDto(out);
     }
@@ -78,11 +74,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void deleteCategory(Long catId) {
-        categoryRepository.findById(catId)
-                .orElseThrow(() -> {
-                    throw new NotFoundParameterException("Не найдена category по catId");
-                });
+        Category category = getCategoryByIdFromRepository(catId);
+        if (!eventRepository.findAllByCategory(category).isEmpty()) {
+            throw new ConflictException("Нельзя удалить категорию к ней привязаны Event");
+        }
         categoryRepository.deleteById(catId);
         log.info("Категория с id: {} удалена", catId);
+    }
+
+    private Category getCategoryByIdFromRepository(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
     }
 }

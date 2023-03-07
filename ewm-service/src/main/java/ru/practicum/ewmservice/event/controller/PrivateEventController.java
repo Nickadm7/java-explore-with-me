@@ -67,7 +67,7 @@ public class PrivateEventController {
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateEventStatusForOwner(@NotNull @PathVariable Long userId,
                                                                     @NotNull @PathVariable Long eventId,
-                                                                    @RequestBody EventRequestStatusUpdateRequest request) {
+                                                                    @RequestBody(required = false) EventRequestStatusUpdateRequest request) {
         log.info("Patch запрос к /users/{userId}/events/{eventId}/requests с параметрами userId: {}, eventId: {}",
                 userId, eventId);
         return eventService.updateEventStatusForOwner(userId, eventId, request);

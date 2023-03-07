@@ -15,6 +15,7 @@ import ru.practicum.ewmservice.event.mapper.EventRequestStatusUpdateMapper;
 import ru.practicum.ewmservice.event.mapper.LocationMapper;
 import ru.practicum.ewmservice.event.model.*;
 import ru.practicum.ewmservice.event.repository.EventRepository;
+import ru.practicum.ewmservice.exception.ConflictException;
 import ru.practicum.ewmservice.exception.ValidationException;
 import ru.practicum.ewmservice.exception.WrongTimeException;
 import ru.practicum.ewmservice.exception.WrongUpdatedEventException;
@@ -245,10 +246,10 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult updateEventStatusForOwner(Long userId,
                                                                     Long eventId,
                                                                     EventRequestStatusUpdateRequest request) {
+        if (request == null) throw new ConflictException("Ошибка в данных Request");
         getUserByIdFromRepository(userId); //проверка что пользователь существует
         Event event = getEventByIdFromRepository(eventId);
         checkUserCanUpdateAndViewEvent(userId, event);
-
         List<ParticipationRequest> requests = requestRepository.findAllByIdIn(request.getRequestIds());
         if (requests.isEmpty()) {
             return new EventRequestStatusUpdateResult();
@@ -257,6 +258,11 @@ public class EventServiceImpl implements EventService {
         List<ParticipationRequest> outRequests = requests.stream()
                 .filter(r -> r.getStatus().equals(Status.PENDING))
                 .collect(Collectors.toList());
+        int countConfirmedRequest = requestRepository.findAllByEvent_Id(event.getId()).size();
+        int delta = event.getParticipantLimit() - countConfirmedRequest;
+        if (delta < 1) {
+            throw new ConflictException("Нет доступных мест в Event");
+        }
         switch (request.getStatus()) {
             case REJECTED:
                 requestsSetStatus(outRequests, Status.REJECTED);
@@ -265,9 +271,10 @@ public class EventServiceImpl implements EventService {
                 if (event.getParticipantLimit() == 0) {
                     requestsSetStatus(outRequests, Status.CONFIRMED);
                 } else {
-                    int countConfirmedRequest = requestRepository.findAll_ByEvent_IdAndStatus(event.getId(), Status.CONFIRMED).size();
-                    int delta = event.getParticipantLimit() - countConfirmedRequest;
-
+                    countConfirmedRequest = requestRepository.findAllByEvent_Id(event.getId()).size();
+                    delta = event.getParticipantLimit() - countConfirmedRequest;
+                    System.out.println(event.getParticipantLimit());
+                    System.out.println("Delta: " + delta);
                     if (outRequests.size() <= delta) {
                         requestsSetStatus(outRequests, Status.CONFIRMED);
                     } else if (delta > 0) {

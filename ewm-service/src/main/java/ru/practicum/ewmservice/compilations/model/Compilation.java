@@ -34,4 +34,14 @@ public class Compilation {
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
     private List<Event> events; //Список событий входящих в подборку
+
+    @Override
+    public String toString() {
+        return "Compilation{" +
+                "id=" + id +
+                ", pinned=" + pinned +
+                ", title='" + title + '\'' +
+                ", events=" + events +
+                '}';
+    }
 }
