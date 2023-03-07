@@ -2,7 +2,7 @@ package ru.practicum.ewmservice.event.service;
 
 import ru.practicum.ewmservice.event.dto.EventFullDto;
 import ru.practicum.ewmservice.event.dto.EventShortDto;
-import ru.practicum.ewmservice.event.dto.NewEventDto;
+import ru.practicum.ewmservice.event.dto.UpdateEventUserRequest;
 import ru.practicum.ewmservice.event.model.EventRequestStatusUpdateRequest;
 import ru.practicum.ewmservice.event.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewmservice.event.model.UpdateEventAdminRequest;
@@ -36,13 +36,13 @@ public interface EventService {
 
     EventFullDto updateEventByIdForAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    List<EventShortDto> getAllEventByUserIdForOwner(Long userId);
+    List<EventShortDto> getAllEventByUserIdForOwner(Long userId, Integer from, Integer size);
 
-    EventFullDto createEventForOwner(NewEventDto newEventDto, Long userId);
+    EventFullDto createEventForOwner(UpdateEventUserRequest updateEventUserRequest, Long userId);
 
     EventFullDto getEventByIdForOwner(Long userId, Long eventId);
 
-    EventFullDto updateEventByIdForOwner(NewEventDto newEventDto, Long userId, Long eventId);
+    EventFullDto updateEventByIdForOwner(UpdateEventUserRequest updateEventUserRequest, Long userId, Long eventId);
 
     List<ParticipationRequestDto> getRequestsByEventIdForOwner(Long userId, Long eventId);
 

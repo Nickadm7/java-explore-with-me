@@ -3,8 +3,8 @@ package ru.practicum.ewmservice.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.ewmservice.event.model.Location;
+import ru.practicum.ewmservice.event.model.StateAction;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,21 +12,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class NewEventDto {
-    @NotNull
+public class UpdateEventUserRequest {
     private String annotation; //Краткое описание
 
-    @NotNull
     private Long category;
 
-    @NotNull
     private String description; //Полное описание события
 
-    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate; //Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss")
 
-    @NotNull
     private Location location; //Координаты места проведения
 
     private Boolean paid; //Нужно ли оплачивать участие
@@ -35,21 +30,7 @@ public class NewEventDto {
 
     private Boolean requestModeration; //Нужна ли пре-модерация заявок на участие
 
-    @NotNull
     private String title; //Заголовок
 
-    @Override
-    public String toString() {
-        return "NewEventDto{" +
-                "annotation='" + annotation + '\'' +
-                ", category=" + category +
-                ", description='" + description + '\'' +
-                ", eventDate=" + eventDate +
-                ", location=" + location +
-                ", paid=" + paid +
-                ", participantLimit=" + participantLimit +
-                ", requestModeration=" + requestModeration +
-                ", title='" + title + '\'' +
-                '}';
-    }
+    private StateAction stateAction;
 }

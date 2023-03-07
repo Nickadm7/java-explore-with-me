@@ -1,9 +1,6 @@
 package ru.practicum.ewmservice.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.ewmservice.requests.dto.ParticipationRequestDto;
 
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class EventRequestStatusUpdateResult { //Результат подтверждения/отклонения заявок на участие в событии
     private List<ParticipationRequestDto> confirmedRequests;
 

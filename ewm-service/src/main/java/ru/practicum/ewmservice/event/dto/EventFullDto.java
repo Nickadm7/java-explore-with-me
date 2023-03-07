@@ -3,9 +3,8 @@ package ru.practicum.ewmservice.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.ewmservice.categories.dto.CategoryDto;
-import ru.practicum.ewmservice.event.model.Location;
 import ru.practicum.ewmservice.event.model.State;
-import ru.practicum.ewmservice.user.model.User;
+import ru.practicum.ewmservice.user.dto.UserDto;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -18,7 +17,6 @@ import java.time.LocalDateTime;
 public class EventFullDto {
     private Long id;
 
-    @NotNull
     private String annotation; //Краткое описание
 
     @NotNull
@@ -26,20 +24,20 @@ public class EventFullDto {
 
     private Integer confirmedRequests;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn; //Дата и время создания события (в формате "yyyy-MM-dd HH:mm:ss")
 
     private String description; //Полное описание события
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate; //Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss")
 
     @NotNull
-    private User initiator; //Инициатор события
+    private UserDto initiator; //Инициатор события
 
     @NotNull
-    private Location location; //Координаты места проведения
+    private LocationDto location; //Координаты места проведения
 
     @NotNull
     private Boolean paid; //Нужно ли оплачивать участие

@@ -7,13 +7,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewmservice.event.dto.EventFullDto;
 import ru.practicum.ewmservice.event.dto.EventShortDto;
-import ru.practicum.ewmservice.event.dto.NewEventDto;
+import ru.practicum.ewmservice.event.dto.UpdateEventUserRequest;
 import ru.practicum.ewmservice.event.model.EventRequestStatusUpdateRequest;
 import ru.practicum.ewmservice.event.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewmservice.event.service.EventService;
 import ru.practicum.ewmservice.requests.dto.ParticipationRequestDto;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -24,17 +26,19 @@ public class PrivateEventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> getAllEventByUserIdForOwner(@PathVariable("userId") Long userId) {
+    public List<EventShortDto> getAllEventByUserIdForOwner(@PathVariable("userId") Long userId,
+                                                           @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
+                                                           @Positive @RequestParam(required = false, defaultValue = "10") Integer size) {
         log.info("Get запрос к /users/{userId}/events с параметрами userId: {}", userId);
-        return eventService.getAllEventByUserIdForOwner(userId);
+        return eventService.getAllEventByUserIdForOwner(userId, from, size);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public EventFullDto createEventForOwner(@Validated @RequestBody NewEventDto newEventDto,
+    public EventFullDto createEventForOwner(@Validated @RequestBody UpdateEventUserRequest updateEventUserRequest,
                                             @PathVariable("userId") Long userId) {
         log.info("Post запрос к /users/{userId}/events с параметрами userId: {}", userId);
-        return eventService.createEventForOwner(newEventDto, userId);
+        return eventService.createEventForOwner(updateEventUserRequest, userId);
     }
 
     @GetMapping(path = "/{eventId}")
@@ -45,11 +49,11 @@ public class PrivateEventController {
     }
 
     @PatchMapping(path = "/{eventId}")
-    public EventFullDto updateEventByIdForOwner(@Validated @RequestBody NewEventDto newEventDto,
+    public EventFullDto updateEventByIdForOwner(@Validated @RequestBody UpdateEventUserRequest updateEventUserRequest,
                                                 @PathVariable("userId") Long userId,
                                                 @PathVariable("eventId") Long eventId) {
         log.info("Patch запрос к /users/{userId}/events/{eventId} с параметрами userId: {}, eventId: {}", userId, eventId);
-        return eventService.updateEventByIdForOwner(newEventDto, userId, eventId);
+        return eventService.updateEventByIdForOwner(updateEventUserRequest, userId, eventId);
     }
 
     @GetMapping("/{eventId}/requests")
@@ -60,7 +64,7 @@ public class PrivateEventController {
         return eventService.getRequestsByEventIdForOwner(userId, eventId);
     }
 
-    @PatchMapping("/events/{eventId}/requests")
+    @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateEventStatusForOwner(@NotNull @PathVariable Long userId,
                                                                     @NotNull @PathVariable Long eventId,
                                                                     @RequestBody EventRequestStatusUpdateRequest request) {

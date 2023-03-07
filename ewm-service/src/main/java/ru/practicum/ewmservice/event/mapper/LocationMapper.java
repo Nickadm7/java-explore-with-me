@@ -17,4 +17,11 @@ public class LocationMapper {
         out.setLat(locationDto.getLat());
         return out;
     }
+
+    public static LocationDto locationToLocationDto(Location location) {
+        return LocationDto.builder()
+                .lon(location.getLon())
+                .lat(location.getLat())
+                .build();
+    }
 }
