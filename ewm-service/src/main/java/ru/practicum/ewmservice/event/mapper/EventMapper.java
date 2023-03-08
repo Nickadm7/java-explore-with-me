@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EventMapper {
+public final class EventMapper {
 
     public static Event newEventDtoToEvent(UpdateEventUserRequest updateEventUserRequest,
                                            User initiator,

@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewmservice.compilations.dto.CompilationDto;
-import ru.practicum.ewmservice.compilations.dto.NewCompilationDto;
+import ru.practicum.ewmservice.compilations.dto.InputCompilationDto;
 import ru.practicum.ewmservice.compilations.model.Compilation;
 import ru.practicum.ewmservice.event.mapper.EventMapper;
 import ru.practicum.ewmservice.event.model.Event;
@@ -13,11 +13,11 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CompilationMapper {
-    public static Compilation newCompilationDtoToCompilation(NewCompilationDto newCompilationDto, List<Event> events) {
+public final class CompilationMapper {
+    public static Compilation newCompilationDtoToCompilation(InputCompilationDto inputCompilationDto, List<Event> events) {
         Compilation compilation = new Compilation();
-        compilation.setPinned(newCompilationDto.getPinned());
-        compilation.setTitle(newCompilationDto.getTitle());
+        compilation.setPinned(inputCompilationDto.getPinned());
+        compilation.setTitle(inputCompilationDto.getTitle());
         compilation.setEvents(events);
         return compilation;
     }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewmservice.compilations.dto.CompilationDto;
+import ru.practicum.ewmservice.compilations.dto.InputCompilationDto;
 import ru.practicum.ewmservice.compilations.dto.NewCompilationDto;
 import ru.practicum.ewmservice.compilations.service.CompilationService;
 
@@ -18,10 +19,10 @@ public class AdminCompilationController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CompilationDto createCompilationForAdmin(@Validated @RequestBody NewCompilationDto newCompilationDto) {
+    public CompilationDto createCompilationForAdmin(@Validated @RequestBody InputCompilationDto inputCompilationDto) {
         log.info("Post запрос к /admin/compilations с параметрами events: {}, pinned: {}, title: {}",
-                newCompilationDto.getEvents(), newCompilationDto.getPinned(), newCompilationDto.getTitle());
-        return compilationService.createCompilationForAdmin(newCompilationDto);
+                inputCompilationDto.getEvents(), inputCompilationDto.getPinned(), inputCompilationDto.getTitle());
+        return compilationService.createCompilationForAdmin(inputCompilationDto);
     }
 
     @DeleteMapping(path = "/{compId}")
@@ -33,7 +34,7 @@ public class AdminCompilationController {
 
     @PatchMapping(path = "/{compId}")
     public CompilationDto updateCompilationForAdmin(@Validated @RequestBody NewCompilationDto newCompilationDto,
-                                 @PathVariable("compId") Long compId) {
+                                                    @PathVariable("compId") Long compId) {
         log.info("Patch запрос к /admin/compilations/{compId} с параметрами compId: {}, events: {}, pinned: {}, title: {}",
                 compId, newCompilationDto.getEvents(), newCompilationDto.getPinned(), newCompilationDto.getTitle());
         return compilationService.updateCompilationForAdmin(newCompilationDto, compId);

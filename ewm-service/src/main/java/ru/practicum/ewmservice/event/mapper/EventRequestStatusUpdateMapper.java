@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EventRequestStatusUpdateMapper {
+public final class EventRequestStatusUpdateMapper {
     public static EventRequestStatusUpdateResult toEventRequestStatusUpdateResult(List<ParticipationRequest> requests) {
         List<ParticipationRequestDto> requestsDto = RequestMapper.RequestToRequestDtoList(requests);
         return EventRequestStatusUpdateResult.builder()

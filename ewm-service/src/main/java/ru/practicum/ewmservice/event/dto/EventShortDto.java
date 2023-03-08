@@ -39,4 +39,19 @@ public class EventShortDto {
 
     @NotNull
     private Long views;
+
+    @Override
+    public String toString() {
+        return "EventShortDto{" +
+                "id=" + id +
+                ", annotation='" + annotation + '\'' +
+                ", category=" + category +
+                ", confirmedRequests=" + confirmedRequests +
+                ", eventDate=" + eventDate +
+                ", initiator=" + initiator +
+                ", paid=" + paid +
+                ", title='" + title + '\'' +
+                ", views=" + views +
+                '}';
+    }
 }

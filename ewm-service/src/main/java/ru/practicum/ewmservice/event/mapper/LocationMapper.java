@@ -10,7 +10,7 @@ import ru.practicum.ewmservice.event.model.Location;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LocationMapper {
+public final class LocationMapper {
     public static Location locationDtoToLocation(LocationDto locationDto) {
         Location out = new Location();
         out.setLon(locationDto.getLon());

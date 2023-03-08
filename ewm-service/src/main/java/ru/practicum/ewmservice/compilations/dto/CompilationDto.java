@@ -18,4 +18,14 @@ public class CompilationDto {
     private String title;
 
     private List<EventShortDto> events;
+
+    @Override
+    public String toString() {
+        return "CompilationDto{" +
+                "id=" + id +
+                ", pinned=" + pinned +
+                ", title='" + title + '\'' +
+                ", events=" + events +
+                '}';
+    }
 }

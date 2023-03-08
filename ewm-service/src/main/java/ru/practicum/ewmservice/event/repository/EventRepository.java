@@ -13,5 +13,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByInitiator(User initiator);
 
     List<Event> findAllByCategory(Category category);
-
 }

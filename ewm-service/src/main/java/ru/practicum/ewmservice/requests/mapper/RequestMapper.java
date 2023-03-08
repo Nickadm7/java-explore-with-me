@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RequestMapper {
+public final class RequestMapper {
     public static List<ParticipationRequestDto> RequestToRequestDtoList(List<ParticipationRequest> requests) {
         return requests.stream()
                 .map(RequestMapper::RequestToRequestDto)

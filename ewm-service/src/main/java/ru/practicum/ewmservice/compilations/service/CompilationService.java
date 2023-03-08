@@ -1,6 +1,7 @@
 package ru.practicum.ewmservice.compilations.service;
 
 import ru.practicum.ewmservice.compilations.dto.CompilationDto;
+import ru.practicum.ewmservice.compilations.dto.InputCompilationDto;
 import ru.practicum.ewmservice.compilations.dto.NewCompilationDto;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface CompilationService {
 
     CompilationDto getCompilationById(Long compId);
 
-    CompilationDto createCompilationForAdmin(NewCompilationDto newCompilationDto);
+    CompilationDto createCompilationForAdmin(InputCompilationDto inputCompilationDto);
 
     void deleteCompilationForAdmin(Long compId);
 

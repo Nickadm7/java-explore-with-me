@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.ewmservice.compilations.dto.CompilationDto;
+import ru.practicum.ewmservice.compilations.dto.InputCompilationDto;
 import ru.practicum.ewmservice.compilations.dto.NewCompilationDto;
 import ru.practicum.ewmservice.compilations.mapper.CompilationMapper;
 import ru.practicum.ewmservice.compilations.model.Compilation;
@@ -42,21 +43,15 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getCompilationById(Long compId) {
-        Compilation out = compilationRepository.findById(compId)
-                .orElseThrow(() -> {
-                    log.info("Не найдена Compilation с id: {}", compId);
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        Compilation out = getCompilationByIdFromRepository(compId);
         log.info("Найдена Compilation с id: {}", compId);
-        System.out.println(out);
-        //TODO доделать добавление списка Event
         return CompilationMapper.compilationToCompilationDto(out);
     }
 
     @Override
-    public CompilationDto createCompilationForAdmin(NewCompilationDto newCompilationDto) {
-        List<Event> events = eventRepository.findAllById(newCompilationDto.getEvents());
-        Compilation compilationToSave = CompilationMapper.newCompilationDtoToCompilation(newCompilationDto, events);
+    public CompilationDto createCompilationForAdmin(InputCompilationDto inputCompilationDto) {
+        List<Event> events = eventRepository.findAllById(inputCompilationDto.getEvents());
+        Compilation compilationToSave = CompilationMapper.newCompilationDtoToCompilation(inputCompilationDto, events);
         Compilation out = compilationRepository.save(compilationToSave);
         log.info("Сохранен Compilation id: {}, pinned: {}, title: {}", out.getId(),
                 out.getPinned(), out.getTitle());
@@ -65,23 +60,14 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void deleteCompilationForAdmin(Long compId) {
-        compilationRepository.findById(compId)
-                .orElseThrow(() -> {
-                    log.info("Не найдена Compilation с id: {} для удаления", compId);
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        getCompilationByIdFromRepository(compId); //проверка что Compilation существует
         compilationRepository.deleteById(compId);
         log.info("Успешно удалена Compilation с id: {}", compId);
     }
 
     @Override
     public CompilationDto updateCompilationForAdmin(NewCompilationDto newCompilationDto, Long compId) {
-        Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> {
-                    log.info("Не найдена Compilation с id: {} для обновления", compId);
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
-
+        Compilation compilation = getCompilationByIdFromRepository(compId);
         if (newCompilationDto.getPinned() != null) {
             compilation.setPinned(newCompilationDto.getPinned());
         }
@@ -92,7 +78,16 @@ public class CompilationServiceImpl implements CompilationService {
         if (!events.isEmpty()) {
             compilation.setEvents(events);
         }
+        compilationRepository.save(compilation);
         log.info("Успешно обновлена Compilation с id: {}", compId);
         return CompilationMapper.compilationToCompilationDto(compilation);
+    }
+
+    private Compilation getCompilationByIdFromRepository(Long compId) {
+        return compilationRepository.findById(compId)
+                .orElseThrow(() -> {
+                    log.info("Не найдена Compilation с id: {}", compId);
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                });
     }
 }
