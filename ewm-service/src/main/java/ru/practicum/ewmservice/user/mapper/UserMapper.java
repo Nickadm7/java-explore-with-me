@@ -20,7 +20,7 @@ public final class UserMapper {
         return user;
     }
 
-    public static UserDto userToUserDto (User user) {
+    public static UserDto userToUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())

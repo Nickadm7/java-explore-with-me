@@ -32,7 +32,7 @@ public class RequestServiceImpl implements RequestService {
         User user = getUserByIdFromRepository(userId);
         List<ParticipationRequest> out = requestRepository.findAll_ByRequester(user);
         log.info("Получены все запросы от User id: {}", userId);
-        return RequestMapper.RequestToRequestDtoList(out);
+        return RequestMapper.requestToRequestDtoList(out);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RequestServiceImpl implements RequestService {
         }
         ParticipationRequest out = requestRepository.save(requestToSave);
         log.info("Успешно создан запрос c id = {} ", out.getId());
-        return RequestMapper.RequestToRequestDto(out);
+        return RequestMapper.requestToRequestDto(out);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RequestServiceImpl implements RequestService {
         }
         request.setStatus(Status.CANCELED);
         log.info("Успешно отменен Request c id: {}", requestId);
-        return RequestMapper.RequestToRequestDto(request);
+        return RequestMapper.requestToRequestDto(request);
     }
 
     private User getUserByIdFromRepository(Long userId) {

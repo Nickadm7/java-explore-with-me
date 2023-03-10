@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RequestMapper {
-    public static List<ParticipationRequestDto> RequestToRequestDtoList(List<ParticipationRequest> requests) {
+    public static List<ParticipationRequestDto> requestToRequestDtoList(List<ParticipationRequest> requests) {
         return requests.stream()
-                .map(RequestMapper::RequestToRequestDto)
+                .map(RequestMapper::requestToRequestDto)
                 .collect(Collectors.toList());
     }
 
-    public static ParticipationRequestDto RequestToRequestDto(ParticipationRequest request) {
+    public static ParticipationRequestDto requestToRequestDto(ParticipationRequest request) {
         return ParticipationRequestDto.builder()
                 .id(request.getId())
                 .created(request.getCreated())

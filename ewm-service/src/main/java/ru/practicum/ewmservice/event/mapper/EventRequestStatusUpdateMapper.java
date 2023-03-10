@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EventRequestStatusUpdateMapper {
     public static EventRequestStatusUpdateResult toEventRequestStatusUpdateResult(List<ParticipationRequest> requests) {
-        List<ParticipationRequestDto> requestsDto = RequestMapper.RequestToRequestDtoList(requests);
+        List<ParticipationRequestDto> requestsDto = RequestMapper.requestToRequestDtoList(requests);
         return EventRequestStatusUpdateResult.builder()
                 .confirmedRequests(
                         requestsDto.stream()

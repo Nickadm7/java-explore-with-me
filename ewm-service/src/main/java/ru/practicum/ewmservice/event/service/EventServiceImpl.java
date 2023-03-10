@@ -280,7 +280,7 @@ public class EventServiceImpl implements EventService {
         checkUserCanUpdateAndViewEvent(userId, event);
         List<ParticipationRequest> out = requestRepository.findAll_ByEvent(event);
         log.info("Получен список запросов на Event с id: {}", eventId);
-        return RequestMapper.RequestToRequestDtoList(out);
+        return RequestMapper.requestToRequestDtoList(out);
     }
 
     @Override
