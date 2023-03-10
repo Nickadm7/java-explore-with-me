@@ -10,7 +10,6 @@ import ru.practicum.ewmservice.event.service.EventService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -25,8 +24,8 @@ public class PublicEventController {
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false, defaultValue = "false") Boolean paid,
-            @RequestParam(required = false) LocalDateTime rangeStart,
-            @RequestParam(required = false) LocalDateTime rangeEnd,
+            @RequestParam(required = false) String rangeStart,
+            @RequestParam(required = false) String rangeEnd,
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(required = false, defaultValue = "EVENT_DATE") String sort,
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
@@ -38,10 +37,10 @@ public class PublicEventController {
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
     }
 
-    @GetMapping ("/{id}")
+    @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable @Positive Long id, HttpServletRequest request) {
         log.info("Get запрос к /events/id с параметрами id: {}, client ip: {}, endpoint path: {}",
-               id, request.getRemoteAddr(), request.getRequestURI());
+                id, request.getRemoteAddr(), request.getRequestURI());
         return eventService.getEventById(id, request);
     }
 }

@@ -9,15 +9,14 @@ import ru.practicum.ewmservice.event.model.UpdateEventAdminRequest;
 import ru.practicum.ewmservice.requests.dto.ParticipationRequestDto;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
     List<EventShortDto> searchEventUseFilter(String text,
                                              List<Long> categories,
                                              Boolean paid,
-                                             LocalDateTime rangeStart,
-                                             LocalDateTime rangeEnd,
+                                             String rangeStart,
+                                             String rangeEnd,
                                              Boolean onlyAvailable,
                                              String sort,
                                              int from,
@@ -29,8 +28,8 @@ public interface EventService {
     List<EventFullDto> getAllEventsUseFilterForAdmin(List<Long> users,
                                                      List<String> states,
                                                      List<Long> categories,
-                                                     LocalDateTime rangeStart,
-                                                     LocalDateTime rangeEnd,
+                                                     String rangeStart,
+                                                     String rangeEnd,
                                                      int from,
                                                      int size);
 

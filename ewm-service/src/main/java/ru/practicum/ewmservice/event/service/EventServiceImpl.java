@@ -1,7 +1,10 @@
 package ru.practicum.ewmservice.event.service;
 
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,10 +32,11 @@ import ru.practicum.ewmservice.user.repository.UserRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -42,19 +46,44 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public List<EventShortDto> searchEventUseFilter(String text,
                                                     List<Long> categories,
                                                     Boolean paid,
-                                                    LocalDateTime rangeStart,
-                                                    LocalDateTime rangeEnd,
+                                                    String rangeStart,
+                                                    String rangeEnd,
                                                     Boolean onlyAvailable,
                                                     String sort,
                                                     int from,
                                                     int size,
                                                     HttpServletRequest request) {
-        return null;
+        LocalDateTime rangeStartTime = getRangeStartTime(rangeStart);
+        LocalDateTime rangeEndTime = getRangeEndTime(rangeEnd);
+        if (rangeStartTime.isAfter(rangeEndTime)) {
+            throw new ValidationException("Окончание раньше начала");
+        }
+
+        BooleanBuilder predicate = getPredicateForPublicSearch(text, categories, paid, rangeStartTime, rangeEndTime);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Event> eventsPredicateAndPageable = eventRepository.findAll(predicate, pageable).toList();
+        List<Event> sortEventsByAvailable = sortEventsAvailableOrNot(eventsPredicateAndPageable, onlyAvailable);
+
+        List<EventShortDto> eventShortDtos = sortEventsByAvailable.stream()
+                .map(EventMapper::eventToEventShortDto)
+                .collect(toList());
+
+        List<EventShortDto> out = new ArrayList<>();
+        if (sort.equals("EVENT_DATE")) {
+            out = eventShortDtos;
+        }
+        if (sort.equals("VIEWS")) {
+            out = eventShortDtos;
+            out.sort(Comparator.comparing(EventShortDto::getViews).reversed());
+        }
+        log.info("Успешно получен список Event (для пользователей) с фильтрацией: {}", out);
+        return out;
     }
 
     @Override
@@ -63,7 +92,7 @@ public class EventServiceImpl implements EventService {
         Event event = getEventByIdFromRepository(eventId);
         confirmedRequests = requestRepository.findAll_ByEvent_IdAndStatus(eventId, Status.CONFIRMED);
         Map<Long, Long> views = new HashMap<>();
-        //TODO добавить сохранение в статистику
+        //TODO
         log.info("Успешно получен Event по id: {}", eventId);
         return EventMapper.constructorToEventFullDto(event, confirmedRequests, views);
     }
@@ -72,11 +101,23 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getAllEventsUseFilterForAdmin(List<Long> users,
                                                             List<String> states,
                                                             List<Long> categories,
-                                                            LocalDateTime rangeStart,
-                                                            LocalDateTime rangeEnd,
+                                                            String rangeStart,
+                                                            String rangeEnd,
                                                             int from,
                                                             int size) {
-        return null;
+        LocalDateTime rangeStartTime = getRangeStartTime(rangeStart);
+        LocalDateTime rangeEndTime = getRangeEndTime(rangeEnd);
+        if (rangeStartTime.isAfter(rangeEndTime)) {
+            throw new ValidationException("Окончание раньше начала");
+        }
+        BooleanBuilder predicate = getPredicateForAdminSearch(users, states, categories, rangeStartTime, rangeEndTime);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Event> eventsPredicateAndPageable = eventRepository.findAll(predicate, pageable).toList();
+        List<EventFullDto> eventsFullDto = eventsPredicateAndPageable.stream()
+                .map(EventMapper::eventToEventFullDto)
+                .collect(toList());
+        log.info("Успешно получен список Event (для падмина) с фильтрацией: {}", eventsFullDto);
+        return eventsFullDto;
     }
 
     @Override
@@ -145,7 +186,7 @@ public class EventServiceImpl implements EventService {
         }
         Event out = eventRepository.save(eventForUpdate);
         log.info("Успешно обновлен админом Event с id: {}", eventForUpdate.getId());
-        return EventMapper.EventToEventFullDto(out);
+        return EventMapper.eventToEventFullDto(out);
     }
 
     @Override
@@ -171,7 +212,7 @@ public class EventServiceImpl implements EventService {
         Event outEvent = eventRepository.save(eventToSave);
         log.info("Сохранен Event id: {}, initiatorId: {}, categoryId: {}", outEvent.getId(),
                 initiator.getId(), category.getId());
-        return EventMapper.EventToEventFullDto(outEvent);
+        return EventMapper.eventToEventFullDto(outEvent);
     }
 
     @Override
@@ -230,7 +271,7 @@ public class EventServiceImpl implements EventService {
         }
         Event out = eventRepository.save(event);
         log.info("Успешно обновлен Event с id: {}, пользователем с id: {}", eventId, userId);
-        return EventMapper.EventToEventFullDto(out);
+        return EventMapper.eventToEventFullDto(out);
     }
 
     @Override
@@ -257,7 +298,7 @@ public class EventServiceImpl implements EventService {
         checkEventIsNotFull(event);
         List<ParticipationRequest> outRequests = requests.stream()
                 .filter(r -> r.getStatus().equals(Status.PENDING))
-                .collect(Collectors.toList());
+                .collect(toList());
         int countConfirmedRequest = requestRepository.findAllByEvent_Id(event.getId()).size();
         int delta = event.getParticipantLimit() - countConfirmedRequest;
         if (delta < 1) {
@@ -273,8 +314,6 @@ public class EventServiceImpl implements EventService {
                 } else {
                     countConfirmedRequest = requestRepository.findAllByEvent_Id(event.getId()).size();
                     delta = event.getParticipantLimit() - countConfirmedRequest;
-                    System.out.println(event.getParticipantLimit());
-                    System.out.println("Delta: " + delta);
                     if (outRequests.size() <= delta) {
                         requestsSetStatus(outRequests, Status.CONFIRMED);
                     } else if (delta > 0) {
@@ -319,10 +358,10 @@ public class EventServiceImpl implements EventService {
     private Map<Event, List<ParticipationRequest>> findConfirmedRequestsMap(List<Event> events) {
         List<Long> eventsIds = events.stream()
                 .map(Event::getId)
-                .collect(Collectors.toList());
+                .collect(toList());
         List<ParticipationRequest> confirmedRequests = requestRepository.findAll_ByEvent_IdsList(eventsIds);
         return confirmedRequests.stream()
-                .collect(Collectors.groupingBy(ParticipationRequest::getEvent, Collectors.toList()));
+                .collect(Collectors.groupingBy(ParticipationRequest::getEvent, toList()));
     }
 
     private void checkEventIsNotFull(Event event) {
@@ -337,4 +376,76 @@ public class EventServiceImpl implements EventService {
         requests.forEach(r -> r.setStatus(status));
     }
 
+    private BooleanBuilder getPredicateForPublicSearch(String text,
+                                                       List<Long> categories,
+                                                       Boolean paid,
+                                                       LocalDateTime rangeStart,
+                                                       LocalDateTime rangeEnd) {
+        BooleanBuilder outPredicate = new BooleanBuilder();
+        if (text != null) {
+            outPredicate.and(QEvent.event.annotation.likeIgnoreCase(text)
+                    .or(QEvent.event.description.likeIgnoreCase(text)));
+        }
+        if (!categories.isEmpty()) {
+            outPredicate.and(QEvent.event.category.id.in(categories));
+        }
+        if (paid != null) {
+            outPredicate.and(QEvent.event.paid.eq(paid));
+        }
+        outPredicate.and(QEvent.event.eventDate.after(rangeStart));
+        outPredicate.and(QEvent.event.eventDate.before(rangeEnd));
+        return outPredicate;
+    }
+
+    private List<Event> sortEventsAvailableOrNot(List<Event> events, Boolean onlyAvailable) {
+        List<Event> outEvents;
+        if (onlyAvailable) {
+            outEvents = events.stream()
+                    .filter(e -> e.getConfirmedRequests() < e.getParticipantLimit())
+                    .collect(toList());
+            return outEvents;
+        } else {
+            return events;
+        }
+    }
+
+    private BooleanBuilder getPredicateForAdminSearch(List<Long> users,
+                                                      List<String> states,
+                                                      List<Long> categories,
+                                                      LocalDateTime rangeStart,
+                                                      LocalDateTime rangeEnd) {
+        BooleanBuilder outPredicate = new BooleanBuilder();
+        List<State> stateList = new ArrayList<>();
+        if (states != null) {
+            stateList = states.stream().map(State::valueOf).collect(toList());
+        }
+        if (users != null && !users.isEmpty()) {
+            outPredicate.and(QEvent.event.initiator.id.in(users));
+        }
+        if (states != null) {
+            outPredicate.and(QEvent.event.state.in(stateList));
+        }
+        if (categories != null && !categories.isEmpty()) {
+            outPredicate.and(QEvent.event.category.id.in(categories));
+        }
+        outPredicate.and(QEvent.event.eventDate.after(rangeStart));
+        outPredicate.and(QEvent.event.eventDate.before(rangeEnd));
+        return outPredicate;
+    }
+
+    private LocalDateTime getRangeStartTime(String rangeStart) {
+        if (rangeStart != null) {
+            return LocalDateTime.parse(rangeStart, formatter);
+        } else {
+            return LocalDateTime.now();
+        }
+    }
+
+    private LocalDateTime getRangeEndTime(String rangeEnd) {
+        if (rangeEnd != null) {
+            return LocalDateTime.parse(rangeEnd, formatter);
+        } else {
+            return LocalDateTime.now().plusYears(111);
+        }
+    }
 }
