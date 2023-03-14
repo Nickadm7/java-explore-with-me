@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class StatsClient extends BaseClient {
-    private final static String NAME = "EWM-SERVICE";
+    private final String NAME = "EWM-SERVICE";
 
     @Autowired
     public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
