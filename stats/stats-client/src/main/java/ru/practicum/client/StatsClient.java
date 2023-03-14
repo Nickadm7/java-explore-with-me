@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class StatsClient extends BaseClient {
-    private final String NAME = "EWM-SERVICE";
-
     @Autowired
     public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
@@ -37,10 +35,10 @@ public class StatsClient extends BaseClient {
     }
 
     public void createHit(HttpServletRequest httpServletRequest) {
-        log.info("Получен запрос на сохранение статистики name: {}, URL: {}, Addr: {}, time: {}",
-                NAME, httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr(), LocalDateTime.now());
+        log.info("Получен запрос на сохранение статистики name: EWM-SERVICE, URL: {}, Addr: {}, time: {}",
+                httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr(), LocalDateTime.now());
         post(new EndpointHitDto(
-                NAME,
+                "EWM-SERVICE",
                 httpServletRequest.getRequestURI(),
                 httpServletRequest.getRemoteAddr(),
                 LocalDateTime.now()));
