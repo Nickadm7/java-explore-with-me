@@ -50,7 +50,7 @@ public class StatServiceImpl implements StatsService {
         if (endpointHit.getIp() == null || endpointHit.getIp().isEmpty()) {
             throw new ValidationException("Ip не должен быть null");
         }
-        if (endpointHit.getTimestamp() == null ) {
+        if (endpointHit.getTimestamp() == null) {
             throw new ValidationException("Timestamp не должен быть null");
         }
         Hit hit = StatsMapper.endpointHitToHit(endpointHit);
