@@ -18,12 +18,4 @@ public class Category {
     private Long id;
     @Column(name = "name", unique = true)
     private String name;
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

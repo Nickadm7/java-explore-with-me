@@ -26,7 +26,7 @@ public class PrivateEventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> getAllEventByUserIdForOwner(@PathVariable("userId") Long userId,
+    public List<EventShortDto> getAllEventByUserIdForOwner(@PathVariable Long userId,
                                                            @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
                                                            @Positive @RequestParam(required = false, defaultValue = "10") Integer size) {
         log.info("Get запрос к /users/{userId}/events с параметрами userId: {}", userId);
@@ -36,29 +36,29 @@ public class PrivateEventController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public EventFullDto createEventForOwner(@Validated @RequestBody UpdateEventUserRequest updateEventUserRequest,
-                                            @PathVariable("userId") Long userId) {
+                                            @PathVariable Long userId) {
         log.info("Post запрос к /users/{userId}/events с параметрами userId: {}", userId);
         return eventService.createEventForOwner(updateEventUserRequest, userId);
     }
 
     @GetMapping(path = "/{eventId}")
-    public EventFullDto getEventByIdForOwner(@PathVariable("userId") Long userId,
-                                             @PathVariable("eventId") Long eventId) {
+    public EventFullDto getEventByIdForOwner(@PathVariable Long userId,
+                                             @PathVariable Long eventId) {
         log.info("Get запрос к /users/{userId}/events/{eventId} с параметрами userId: {}, eventId: {}", userId, eventId);
         return eventService.getEventByIdForOwner(userId, eventId);
     }
 
     @PatchMapping(path = "/{eventId}")
     public EventFullDto updateEventByIdForOwner(@Validated @RequestBody UpdateEventUserRequest updateEventUserRequest,
-                                                @PathVariable("userId") Long userId,
-                                                @PathVariable("eventId") Long eventId) {
+                                                @PathVariable Long userId,
+                                                @PathVariable Long eventId) {
         log.info("Patch запрос к /users/{userId}/events/{eventId} с параметрами userId: {}, eventId: {}", userId, eventId);
         return eventService.updateEventByIdForOwner(updateEventUserRequest, userId, eventId);
     }
 
     @GetMapping("/{eventId}/requests")
-    public List<ParticipationRequestDto> getRequestsByEventIdForOwner(@PathVariable("userId") Long userId,
-                                                                      @PathVariable("eventId") Long eventId) {
+    public List<ParticipationRequestDto> getRequestsByEventIdForOwner(@PathVariable Long userId,
+                                                                      @PathVariable Long eventId) {
         log.info("Get запрос к /users/{userId}/events/{eventId}/requests с параметрами userId: {}, eventId: {}",
                 userId, eventId);
         return eventService.getRequestsByEventIdForOwner(userId, eventId);

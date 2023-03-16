@@ -37,15 +37,4 @@ public class    ParticipationRequest {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status; //Статус заявки
-
-    @Override
-    public String toString() {
-        return "ParticipationRequest{" +
-                "id=" + id +
-                ", created=" + created +
-                ", event=" + event +
-                ", requester=" + requester +
-                ", status=" + status +
-                '}';
-    }
 }

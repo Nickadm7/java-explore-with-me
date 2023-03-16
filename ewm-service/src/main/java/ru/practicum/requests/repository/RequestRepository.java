@@ -14,16 +14,16 @@ import java.util.List;
 public interface RequestRepository extends JpaRepository<ParticipationRequest, Long> {
     List<ParticipationRequest> findAll_ByRequester(User requester);
 
-    @Query("select pr from ParticipationRequest as pr " +
-           "where pr.event.id = ?1 " +
-           "and pr.status = ?2")
+    @Query("SELECT pr FROM ParticipationRequest AS pr " +
+            "WHERE pr.event.id = ?1 " +
+            "AND pr.status = ?2")
     List<ParticipationRequest> findAll_ByEvent_IdAndStatus(Long id, Status status);
 
     List<ParticipationRequest> findAllByEvent_Id(Long eventId);
 
-    @Query("select pr from ParticipationRequest as pr " +
-            "where pr.event.id in :ids " +
-            "and pr.status = 'CONFIRMED'")
+    @Query("SELECT pr FROM ParticipationRequest AS pr " +
+            "WHERE pr.event.id IN :ids " +
+            "AND pr.status = 'CONFIRMED'")
     List<ParticipationRequest> findAll_ByEvent_IdsList(List<Long> ids);
 
     ParticipationRequest findByRequester_idAndEvent_id(Long userId, Long eventId);
@@ -32,4 +32,3 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 
     List<ParticipationRequest> findAll_ByEvent(Event event);
 }
-

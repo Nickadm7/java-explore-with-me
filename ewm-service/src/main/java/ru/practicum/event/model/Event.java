@@ -1,9 +1,6 @@
 package ru.practicum.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.categories.model.Category;
 import ru.practicum.user.model.User;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "events")
 @NoArgsConstructor
@@ -70,26 +68,4 @@ public class Event {
 
     @Column(name = "views")
     private Long views;//Количество просмотрев события
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", annotation='" + annotation + '\'' +
-                ", category=" + category +
-                ", confirmedRequests=" + confirmedRequests +
-                ", createdOn=" + createdOn +
-                ", description='" + description + '\'' +
-                ", eventDate=" + eventDate +
-                ", initiator=" + initiator +
-                ", location=" + location +
-                ", paid=" + paid +
-                ", participantLimit=" + participantLimit +
-                ", publishedOn=" + publishedOn +
-                ", requestModeration=" + requestModeration +
-                ", state=" + state +
-                ", title='" + title + '\'' +
-                ", views=" + views +
-                '}';
-    }
 }

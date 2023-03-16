@@ -24,13 +24,4 @@ public class Location {
 
     @Column(name = "lon", unique = true)
     private Double lon; //Долгота
-
-    @Override
-    public String toString() {
-        return "Location{" +
-                "id=" + id +
-                ", lat=" + lat +
-                ", lon=" + lon +
-                '}';
-    }
 }

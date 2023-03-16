@@ -19,14 +19,14 @@ public class RequestController {
     private final RequestService requestService;
 
     @GetMapping
-    public List<ParticipationRequestDto> getAllRequestForCurrentUser(@PathVariable("userId") @Positive Long userId) {
+    public List<ParticipationRequestDto> getAllRequestForCurrentUser(@PathVariable @Positive Long userId) {
         log.info("Get запрос к /users/{userId}/requests с параметрами userId: {}", userId);
         return requestService.getAllRequestForCurrentUser(userId);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ParticipationRequestDto create(@PathVariable("userId") @Positive Long userId,
+    public ParticipationRequestDto create(@PathVariable @Positive Long userId,
                                           @RequestParam(name = "eventId") @Positive Long eventId) {
         log.info("Post запрос к /users/{userId}/requests с параметрами userId: {}, eventId: {}", userId, eventId);
         return requestService.createRequestForCurrentUser(userId, eventId);

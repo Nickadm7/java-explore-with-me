@@ -27,14 +27,14 @@ public class AdminCompilationController {
 
     @DeleteMapping(path = "/{compId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCompilationForAdmin(@PathVariable("compId") Long compId) {
+    public void deleteCompilationForAdmin(@PathVariable Long compId) {
         log.info("Delete запрос к /admin/compilations/{compId} с параметрами compId: {}", compId);
         compilationService.deleteCompilationForAdmin(compId);
     }
 
     @PatchMapping(path = "/{compId}")
     public CompilationDto updateCompilationForAdmin(@Validated @RequestBody NewCompilationDto newCompilationDto,
-                                                    @PathVariable("compId") Long compId) {
+                                                    @PathVariable Long compId) {
         log.info("Patch запрос к /admin/compilations/{compId} с параметрами compId: {}, events: {}, pinned: {}, title: {}",
                 compId, newCompilationDto.getEvents(), newCompilationDto.getPinned(), newCompilationDto.getTitle());
         return compilationService.updateCompilationForAdmin(newCompilationDto, compId);

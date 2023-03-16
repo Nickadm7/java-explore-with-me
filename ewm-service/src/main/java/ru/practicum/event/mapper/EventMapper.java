@@ -4,13 +4,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.categories.mapper.CategoryMapper;
+import ru.practicum.categories.model.Category;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.UpdateEventUserRequest;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.State;
-import ru.practicum.categories.mapper.CategoryMapper;
-import ru.practicum.categories.model.Category;
 import ru.practicum.requests.model.ParticipationRequest;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
@@ -28,21 +28,21 @@ public final class EventMapper {
     public static Event newEventDtoToEvent(UpdateEventUserRequest updateEventUserRequest,
                                            User initiator,
                                            Category category) {
-        Event event = new Event();
-        event.setAnnotation(updateEventUserRequest.getAnnotation());
-        event.setCategory(category);
-        event.setCreatedOn(LocalDateTime.now());
-        event.setDescription(updateEventUserRequest.getDescription());
-        event.setEventDate(updateEventUserRequest.getEventDate());
-        event.setInitiator(initiator);
-        event.setLocation(updateEventUserRequest.getLocation());
-        event.setPaid(updateEventUserRequest.getPaid());
-        event.setParticipantLimit(updateEventUserRequest.getParticipantLimit());
-        event.setRequestModeration(updateEventUserRequest.getRequestModeration());
-        event.setTitle(updateEventUserRequest.getTitle());
-        event.setPublishedOn(LocalDateTime.now());
-        event.setState(State.PENDING);
-        return event;
+        return Event.builder()
+                .annotation(updateEventUserRequest.getAnnotation())
+                .category(category)
+                .createdOn(LocalDateTime.now())
+                .description(updateEventUserRequest.getDescription())
+                .eventDate(updateEventUserRequest.getEventDate())
+                .initiator(initiator)
+                .location(updateEventUserRequest.getLocation())
+                .paid(updateEventUserRequest.getPaid())
+                .participantLimit(updateEventUserRequest.getParticipantLimit())
+                .requestModeration(updateEventUserRequest.getRequestModeration())
+                .title(updateEventUserRequest.getTitle())
+                .publishedOn(LocalDateTime.now())
+                .state(State.PENDING)
+                .build();
     }
 
     public static EventFullDto eventToEventFullDto(Event event) {
