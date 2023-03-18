@@ -3,6 +3,7 @@ package ru.practicum.comments.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comments.dto.CommentDto;
 import ru.practicum.comments.dto.InputCommentDto;
@@ -17,13 +18,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/event")
+@RequestMapping(path = "/events")
 public class PrivateCommentController {
     private final CommentService commentService;
 
     @PostMapping(path = "/{eventId}/comment")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CommentDto createComment(@Valid @RequestBody InputCommentDto inputCommentDto,
+    public CommentDto createComment(@Validated @RequestBody InputCommentDto inputCommentDto,
                                     @PathVariable Long eventId) {
         log.info("Post запрос к /event/{eventId}/comment с параметрами text: {}, authorId: {}, eventId: {}",
                 inputCommentDto.getText(), inputCommentDto.getAuthorId(), eventId);
